@@ -183,6 +183,10 @@ class Wp_Page_Summary_Admin {
 	 */
 	final public function wpps_page_summary_content_save_post( int $post_id )
 	{
+
+        if ( ! is_admin() ) {
+            return;
+        }
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
             return;
         }
@@ -199,7 +203,7 @@ class Wp_Page_Summary_Admin {
         foreach ( $fields as $field ) {
 	        if ( isset( $_POST ) ) {
 	            if ( array_key_exists( $field, $_POST) ) {
-		            update_post_meta( $post_id, $field, sanitize_text_field( $_POST[$field] ) );
+		            update_post_meta( $post_id, $field, $_POST[$field] );
 	            }
             }
         }
