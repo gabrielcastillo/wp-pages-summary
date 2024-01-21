@@ -226,9 +226,9 @@ class Wp_Page_Summary_Admin {
     final public function wpps_page_summary_shortcode_callback( array|string $atts = [], string $content = null ): mixed {
         $pages = $this->get_page_summary_post_type_pages();
         // Check if posts exists
-        if ( ! empty($results) ) {
-	        $content = get_post_meta($results[0]->ID, 'page_summary_target_summary', true);
 
+        if ( ! empty($pages) ) {
+	        $content = get_post_meta($pages[0]->ID, 'page_summary_target_summary', true);
             if ( ! empty($content) ) {
 	            return $content;
             }
