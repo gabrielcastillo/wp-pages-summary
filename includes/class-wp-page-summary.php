@@ -163,6 +163,8 @@ class Wp_Page_Summary {
 		$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'wpps_init_page_summary_post_type_meta_boxes');
 		$this->loader->add_action( 'save_post', $plugin_admin, 'wpps_page_summary_content_save_post' );
 		$this->loader->add_action( 'init', $plugin_admin, 'wpps_page_summary_register_shortcode_init' );
+
+		$this->loader->add_action( 'wp_ajax_check_target_page', $plugin_admin, 'wpps_get_page_summary_post_type_pages_by_id' );
 	}
 
 	/**

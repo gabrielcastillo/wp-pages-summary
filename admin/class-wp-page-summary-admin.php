@@ -48,10 +48,8 @@ class Wp_Page_Summary_Admin {
 	 * @param      string    $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
-
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
-
 	}
 
 	/**
@@ -77,6 +75,11 @@ class Wp_Page_Summary_Admin {
         } else {
 	        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/all.min.js', array( 'jquery' ), $this->version, false );
         }
+
+        wp_localize_script($this->plugin_name, 'wpps_ajax_request', array(
+            'wpps_ajax_url' => admin_url( 'admin-ajax.php' ),
+            'wpps_nonce' => wp_create_nonce('wpps_page_summary_nonce'),
+        ));
 	}
 
 	/**
@@ -203,7 +206,10 @@ class Wp_Page_Summary_Admin {
         foreach ( $fields as $field ) {
 	        if ( isset( $_POST ) ) {
 	            if ( array_key_exists( $field, $_POST) ) {
-		            update_post_meta( $post_id, $field, $_POST[$field] );
+		            if ( $_POST['page_summary_target_page'] === '' ) {
+			            return;
+		            }
+                    update_post_meta( $post_id, $field, $_POST[$field] );
 	            }
             }
         }
@@ -228,7 +234,7 @@ class Wp_Page_Summary_Admin {
 	 * @return mixed|string
 	 */
     final public function wpps_page_summary_shortcode_callback( array|string $atts = [], string $content = null ): mixed {
-        $pages = $this->get_page_summary_post_type_pages();
+        $pages = $this->wpps_get_page_summary_post_type_pages();
         // Check if posts exists
 
         if ( ! empty($pages) ) {
@@ -241,7 +247,11 @@ class Wp_Page_Summary_Admin {
         return '';
     }
 
-    private function get_page_summary_post_type_pages(): array {
+	/**
+     * get_page_summary_post_type_pages
+	 * @return array
+	 */
+    private function wpps_get_page_summary_post_type_pages(): array {
 	    global $post;
 	    $args = array(
 		    'post_type' => 'page_summary',
@@ -259,4 +269,30 @@ class Wp_Page_Summary_Admin {
 	    return get_posts($args);
     }
 
+	/**
+     * Check if page has page summary assigned.
+     *
+	 * @return array
+	 */
+    public function wpps_get_page_summary_post_type_pages_by_id(): array {
+        if ( !wp_verify_nonce(sanitize_text_field($_POST['nonce']), 'wpps_page_summary_nonce') ) {
+            wp_send_json_error(['message' => 'failed request']);
+        }
+
+        $args = array(
+            'post_type' => 'page_summary',
+            'post_status' => 'publish',
+            'meta_query' => array(
+                array(
+                    'key'  => 'page_summary_target_page',
+                    'value' => sanitize_text_field($_POST['p']),
+                    'compare' => '=',
+                ),
+            ),
+        );
+
+        $posts = get_posts($args);
+
+        wp_send_json_success($posts);
+    }
 }
