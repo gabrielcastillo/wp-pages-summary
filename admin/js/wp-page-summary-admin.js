@@ -8,9 +8,9 @@
 		},
 
 		cache() {
-			this.$admin = $('body.wp-admin');
-			this.wpps_target_page = this.$admin.find('select[name="page_summary_target_page"]');
-			this.wpps_page_title = this.$admin.find('input[name="post_title"]');
+			this.$admin 			= $('body.wp-admin');
+			this.wpps_target_page 	= this.$admin.find('select[name="page_summary_target_page"]');
+			this.wpps_page_title 	= this.$admin.find('input[name="post_title"]');
 		},
 
 		eventListeners() {
@@ -41,6 +41,7 @@
 		}
 	};
 
+	// Initialize JS
 	$(document).ready(function(){
 		wpps.init();
 	});

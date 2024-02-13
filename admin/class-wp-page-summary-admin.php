@@ -187,7 +187,7 @@ class Wp_Page_Summary_Admin {
 	final public function wpps_page_summary_content_save_post( int $post_id )
 	{
 
-        if ( ! is_admin() ) {
+        if ( ! is_admin() && current_user_can('administrator') ) {
             return;
         }
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
@@ -240,7 +240,7 @@ class Wp_Page_Summary_Admin {
         if ( ! empty($pages) ) {
 	        $content = get_post_meta($pages[0]->ID, 'page_summary_target_summary', true);
             if ( ! empty($content) ) {
-	            return $content;
+	            return nl2br($content);
             }
         }
 
