@@ -29,7 +29,7 @@ class Wp_Page_Summary_Admin {
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
-	private $plugin_name;
+	private string $plugin_name;
 
 	/**
 	 * The version of this plugin.
@@ -38,7 +38,7 @@ class Wp_Page_Summary_Admin {
 	 * @access   private
 	 * @var      string    $version    The current version of this plugin.
 	 */
-	private $version;
+	private string $version;
 
 	/**
 	 * Initialize the class and set its properties.
@@ -47,7 +47,7 @@ class Wp_Page_Summary_Admin {
 	 * @param      string    $plugin_name       The name of this plugin.
 	 * @param      string    $version    The version of this plugin.
 	 */
-	public function __construct( $plugin_name, $version ) {
+	public function __construct( string $plugin_name, string $version ) {
 		$this->plugin_name = $plugin_name;
 		$this->version = $version;
 	}
@@ -233,9 +233,9 @@ class Wp_Page_Summary_Admin {
 	 * @param array|string $atts
 	 * @param string|null $content
 	 *
-	 * @return mixed|string
+	 * @return string
 	 */
-    final public function wpps_page_summary_shortcode_callback( array|string $atts = [], string $content = null ): mixed {
+    final public function wpps_page_summary_shortcode_callback( array|string $atts = [], string $content = null ): string {
         $pages = $this->wpps_get_page_summary_post_type_pages();
         // Check if posts exists
 
