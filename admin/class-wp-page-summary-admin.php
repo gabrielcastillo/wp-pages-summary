@@ -69,11 +69,13 @@ class Wp_Page_Summary_Admin {
 	 */
 	public function enqueue_scripts() {
 
+        $asset_version = 'v2';
+
         // Check if is dev server, load dev script
         if ( strpos($_SERVER['HTTP_HOST'], '.test') > 0 ) {
 	        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/wp-page-summary-admin.js', array( 'jquery' ), $this->version, false );
         } else {
-	        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/all.min.js', array( 'jquery' ), $this->version, false );
+	        wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . "js/${asset_version}/all.min.js", array( 'jquery' ), $this->version, false );
         }
 
         wp_localize_script($this->plugin_name, 'wpps_ajax_request', array(
